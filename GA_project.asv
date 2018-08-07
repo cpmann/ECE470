@@ -15,7 +15,8 @@ delta = [10, 0.0009, 0.0009];
 max_gen = 200;
 results = zeros(max_gen, 3);
 
-Accuracy = [];
+correct = 0;
+incorrect = 0;
 
 % 1. Load data: 1 million songs encoded with 90 audio features each, and
 % partition into training, testing, and validation sets
@@ -59,11 +60,7 @@ for gen = 1:max_gen
     
     % 4. Check for termination condition
     [result, terminate] = termination_condition(population, fitness, prev_gen_result, delta);
-    
-    % Reset each time to get accuracy for each generation.
-    correct = 0;
-    incorrect = 0;
-    
+       
     for (i = 1:500)
         if (predicted_labels(i) == test_labels(i))
             correct = correct + 1;
@@ -73,7 +70,7 @@ for gen = 1:max_gen
     end
     
     accuracy = correct / (correct + incorrect) * 100;
-    Accuracy = [Accuracy accuracy];
+    Accuracy = [Accuracy
     
     fprintf("D = %5.2f, Mean = %1.5f, Max = %1.5f, Acc = %.2f\n", result(1), result(2), result(3), accuracy);
     
@@ -101,12 +98,6 @@ for gen = 1:max_gen
         
         toc
 end
-
-figure
-plot(Accuracy)
-title('Accuracy of Classification')
-xlabel('Generation')
-ylabel('Accuracy (%)')
 
 % 8. Output final solution
 
